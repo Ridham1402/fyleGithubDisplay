@@ -98,6 +98,7 @@ button {
     padding: 10px;
     text-align: center;
     font-weight: bold;
+    color: #333;
 }
 
 .repo-card main {

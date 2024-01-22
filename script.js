@@ -117,15 +117,39 @@ function displayRepos(repos) {
 }
 
 function displayLanguages(languages) {
+    if (!languages) {
+        return 'Not specified';
+    }
+
     const languageKeys = Object.keys(languages);
     return languageKeys.map(language => `<span>${language}</span>`).join(', ');
 }
 
 function displayPagination(userData, currentPage) {
     const paginationContainer = document.getElementById('pagination');
-    paginationContainer.innerHTML = '';
+    const pageLinksContainer = document.getElementById('pageLinksContainer');
+
+    paginationContainer.style.display = 'flex';
+    pageLinksContainer.innerHTML = '';
 
     const totalPages = Math.ceil(userData.public_repos / itemsPerPage);
+
+    const prevButton = document.getElementById('prevPage');
+    const nextButton = document.getElementById('nextPage');
+
+    if (currentPage > 1) {
+        prevButton.style.display = 'block';
+        prevButton.setAttribute('data-page', currentPage - 1);
+    } else {
+        prevButton.style.display = 'none';
+    }
+
+    if (currentPage < totalPages) {
+        nextButton.style.display = 'block';
+        nextButton.setAttribute('data-page', currentPage + 1);
+    } else {
+        nextButton.style.display = 'none';
+    }
 
     for (let page = 1; page <= totalPages; page++) {
         const pageLink = document.createElement('a');
@@ -134,8 +158,18 @@ function displayPagination(userData, currentPage) {
         pageLink.className = 'page-link';
         pageLink.addEventListener('click', () => fetchReposByPage(userData.login, page));
 
-        paginationContainer.appendChild(pageLink);
+        pageLinksContainer.appendChild(pageLink);
     }
+}
+
+function fetchPrevPage() {
+    const prevPage = parseInt(document.getElementById('prevPage').getAttribute('data-page'));
+    fetchReposByPage(username, prevPage);
+}
+
+function fetchNextPage() {
+    const nextPage = parseInt(document.getElementById('nextPage').getAttribute('data-page'));
+    fetchReposByPage(username, nextPage);
 }
 
 async function fetchReposByPage(username, page) {
