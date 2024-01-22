@@ -105,7 +105,7 @@ button {
     padding: 15px;
 }
 
-.repo-languages {
+.repo-topics {
     margin-top: 10px;
 }
 
@@ -148,4 +148,13 @@ button {
 
 .page-btn:hover {
     background-color: #205493;
+}
+
+.topic-block {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px 5px 0;
+    background-color: #0366d6;
+    color: #fff;
+    border-radius: 3px;
 }

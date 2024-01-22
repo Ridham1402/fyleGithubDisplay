@@ -1,4 +1,4 @@
-const itemsPerPage = 10; // Adjust as needed
+const itemsPerPage = 10; 
 let currentPage = 1;
 let totalRepos = 0;
 
@@ -106,10 +106,10 @@ function displayRepos(repos) {
         repoDescription.textContent = repo.description || 'No description available.';
         repoMain.appendChild(repoDescription);
 
-        const repoLanguages = document.createElement('div');
-        repoLanguages.className = 'repo-languages';
-        repoLanguages.innerHTML = `Languages: ${displayLanguages(repo.languages)}`;
-        repoMain.appendChild(repoLanguages);
+        const repoTopics = document.createElement('div');
+        repoTopics.className = 'repo-topics';
+        repoTopics.innerHTML = `Topics: ${displayTopics(repo.topics)}`;
+        repoMain.appendChild(repoTopics);
 
         repoCard.appendChild(repoHeader);
         repoCard.appendChild(repoMain);
@@ -117,13 +117,11 @@ function displayRepos(repos) {
     });
 }
 
-function displayLanguages(languages) {
-    if (!languages) {
-        return 'Not specified';
+function displayTopics(topics) {
+    if (!topics || topics.length === 0) {
+        return 'No topics specified';
     }
-
-    const languageKeys = Object.keys(languages);
-    return languageKeys.map(language => `<span>${language}</span>`).join(', ');
+    return topics.map(topic => `<span class="topic-block">${topic}</span>`).join('');
 }
 
 function displayPagination() {
@@ -185,6 +183,3 @@ function fetchPrevPage() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // You can add any initialization code here if needed.
-});
