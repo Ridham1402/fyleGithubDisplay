@@ -129,3 +129,23 @@ button {
 .page-link:hover {
     background-color: #205493;
 }
+
+.page-link.active {
+    background-color: #0366d6;
+    color: #fff;
+}
+
+.page-btn {
+    padding: 8px;
+    margin: 0 5px;
+    background-color: #0366d6;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.page-btn:hover {
+    background-color: #205493;
+}

@@ -1,9 +1,11 @@
 const itemsPerPage = 10; // Adjust as needed
+let currentPage = 1;
+let totalRepos = 0;
 
 async function fetchUserDetails() {
     const username = document.getElementById('username').value;
     const userApiUrl = `https://api.github.com/users/${username}`;
-    const reposApiUrl = `https://api.github.com/users/${username}/repos?per_page=${itemsPerPage}`;
+    const reposApiUrl = `https://api.github.com/users/${username}/repos?per_page=${itemsPerPage}&page=${currentPage}`;
 
     try {
         const [userResponse, reposResponse] = await Promise.all([
@@ -12,21 +14,20 @@ async function fetchUserDetails() {
         ]);
 
         if (!userResponse.ok) {
-            console.log("user error");
             throw new Error(`Error fetching GitHub user details: ${userResponse.statusText}`);
         }
 
         if (!reposResponse.ok) {
-            console.log("repo error");
             throw new Error(`Error fetching GitHub repositories: ${reposResponse.statusText}`);
         }
 
         const userData = await userResponse.json();
         const repos = await reposResponse.json();
+        totalRepos = userData.public_repos;
 
         displayUserDetails(userData);
         displayRepos(repos);
-        displayPagination(userData, 1); // Pass userData for total repo count
+        displayPagination();
     } catch (error) {
         console.error(error);
         alert('Error fetching GitHub user details. Please try again.');
@@ -125,54 +126,33 @@ function displayLanguages(languages) {
     return languageKeys.map(language => `<span>${language}</span>`).join(', ');
 }
 
-function displayPagination(userData, currentPage) {
+function displayPagination() {
     const paginationContainer = document.getElementById('pagination');
-    const pageLinksContainer = document.getElementById('pageLinksContainer');
+    const pageNumbersContainer = document.getElementById('pageNumbers');
+    pageNumbersContainer.innerHTML = '';
 
-    paginationContainer.style.display = 'flex';
-    pageLinksContainer.innerHTML = '';
-
-    const totalPages = Math.ceil(userData.public_repos / itemsPerPage);
-
-    const prevButton = document.getElementById('prevPage');
-    const nextButton = document.getElementById('nextPage');
-
-    if (currentPage > 1) {
-        prevButton.style.display = 'block';
-        prevButton.setAttribute('data-page', currentPage - 1);
-    } else {
-        prevButton.style.display = 'none';
-    }
-
-    if (currentPage < totalPages) {
-        nextButton.style.display = 'block';
-        nextButton.setAttribute('data-page', currentPage + 1);
-    } else {
-        nextButton.style.display = 'none';
-    }
+    const totalPages = Math.ceil(totalRepos / itemsPerPage);
 
     for (let page = 1; page <= totalPages; page++) {
-        const pageLink = document.createElement('a');
-        pageLink.href = '#';
+        const pageLink = document.createElement('span');
         pageLink.textContent = page;
         pageLink.className = 'page-link';
-        pageLink.addEventListener('click', () => fetchReposByPage(userData.login, page));
+        pageLink.addEventListener('click', () => fetchReposByPage(page));
 
-        pageLinksContainer.appendChild(pageLink);
+        pageNumbersContainer.appendChild(pageLink);
     }
+
+    // Enable/disable prev and next buttons based on current page
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages;
 }
 
-function fetchPrevPage() {
-    const prevPage = parseInt(document.getElementById('prevPage').getAttribute('data-page'));
-    fetchReposByPage(username, prevPage);
-}
-
-function fetchNextPage() {
-    const nextPage = parseInt(document.getElementById('nextPage').getAttribute('data-page'));
-    fetchReposByPage(username, nextPage);
-}
-
-async function fetchReposByPage(username, page) {
+async function fetchReposByPage(page) {
+    currentPage = page;
+    const username = document.getElementById('username').value;
     const reposApiUrl = `https://api.github.com/users/${username}/repos?per_page=${itemsPerPage}&page=${page}`;
 
     try {
@@ -185,22 +165,24 @@ async function fetchReposByPage(username, page) {
         const repos = await response.json();
 
         displayRepos(repos);
-        updatePaginationStyle(page);
+        displayPagination();
     } catch (error) {
         console.error(error);
         alert('Error fetching GitHub repositories. Please try again.');
     }
 }
 
-function updatePaginationStyle(currentPage) {
-    const pageLinks = document.querySelectorAll('.page-link');
-    pageLinks.forEach((link, index) => {
-        if (index + 1 === currentPage) {
-            link.style.backgroundColor = '#0366d6';
-        } else {
-            link.style.backgroundColor = '';
-        }
-    });
+function fetchNextPage() {
+    const totalPages = Math.ceil(totalRepos / itemsPerPage);
+    if (currentPage < totalPages) {
+        fetchReposByPage(currentPage + 1);
+    }
+}
+
+function fetchPrevPage() {
+    if (currentPage > 1) {
+        fetchReposByPage(currentPage - 1);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
