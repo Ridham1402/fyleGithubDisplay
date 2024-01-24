@@ -1,6 +1,7 @@
 const itemsPerPage = 10; 
 let currentPage = 1;
 let totalRepos = 0;
+let repositories = [];
 
 async function fetchUserDetails() {
     const username = document.getElementById('username').value;
@@ -28,11 +29,18 @@ async function fetchUserDetails() {
         displayUserDetails(userData);
         displayRepos(repos);
         displayPagination();
+
+        // hideSearchBar();
     } catch (error) {
         console.error(error);
         alert('Error fetching GitHub user details. Please try again.');
     }
 }
+
+// function hideSearchBar() {
+//     const searchBar = document.getElementById('githubForm');
+//     searchBar.style.display = 'none';
+// }
 
 function displayUserDetails(userData) {
     const userDetailsContainer = document.getElementById('user-details');
@@ -84,6 +92,18 @@ function displayUserDetails(userData) {
     userDetailsContainer.appendChild(userLocation);
     userDetailsContainer.appendChild(userUrls);
 }
+
+function searchRepos(){
+    const searchTerm = document.getElementById('repoSearch').value.toLowerCase();
+    const filteredRepos = repositories.filter(repo => repo.name.toLowerCase().includes(searchTerm));
+    displayRepos(filteredRepos);
+    displayPagination();
+    fetchReposByPage(currentPage);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('repoSearch').addEventListener('input', () => searchRepos());
+});
 
 function displayRepos(repos) {
     const reposList = document.getElementById('repos-list');
@@ -161,9 +181,12 @@ async function fetchReposByPage(page) {
         }
 
         const repos = await response.json();
+        repositories = repos;
 
         displayRepos(repos);
         displayPagination();
+        searchRepos();
+
     } catch (error) {
         console.error(error);
         alert('Error fetching GitHub repositories. Please try again.');
@@ -173,13 +196,25 @@ async function fetchReposByPage(page) {
 function fetchNextPage() {
     const totalPages = Math.ceil(totalRepos / itemsPerPage);
     if (currentPage < totalPages) {
+
         fetchReposByPage(currentPage + 1);
+        const reposListContainer = document.getElementById('user-details');
+
+        if (reposListContainer) {
+            reposListContainer.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 }
 
 function fetchPrevPage() {
     if (currentPage > 1) {
+        
         fetchReposByPage(currentPage - 1);
+        const reposListContainer = document.getElementById('user-details');
+        
+        if (reposListContainer) {
+            reposListContainer.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 }
 

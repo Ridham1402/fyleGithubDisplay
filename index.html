@@ -15,10 +15,11 @@
             <form id="githubForm">
                 <label for="username">Enter GitHub Username:</label>
                 <input type="text" id="username" required>
-                <button type="button" onclick="fetchUserDetails()">Get User Details</button>
+                <button type="button" onclick="fetchUserDetails()">Get User Repositories</button>
             </form>
             <div id="user-details" class="user-details"></div>
             <h2>Repositories:</h2>
+            <input type="text" id="repoSearch" placeholder="Search repositories">
             <ul id="repos-list" class="repo-grid"></ul>
             <div id="pagination" class="pagination">
                 <button id="prevBtn" class="page-btn" onclick="fetchPrevPage()">Prev</button>
