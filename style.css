@@ -44,10 +44,15 @@ button {
 
 .user-details {
     margin-bottom: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .user-avatar {
-    width: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     margin-right: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -63,16 +68,19 @@ button {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #0366d6;
 }
 
 .user-bio {
     font-size: 16px;
     margin-bottom: 10px;
+    color: #333;
 }
 
 .user-location, .user-urls {
     font-size: 14px;
     margin-bottom: 5px;
+    color: #555;
 }
 
 .user-urls a {
@@ -86,7 +94,7 @@ button {
 }
 
 .repo-card {
-    border: 1px solid #e1e4e8;
+    border: 1px solid #02359c;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

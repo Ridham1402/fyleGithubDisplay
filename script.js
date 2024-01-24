@@ -103,12 +103,12 @@ function displayRepos(repos) {
 
         const repoMain = document.createElement('main');
         const repoDescription = document.createElement('p');
-        repoDescription.textContent = repo.description || 'No description available.';
+        repoDescription.textContent = repo.description;
         repoMain.appendChild(repoDescription);
 
         const repoTopics = document.createElement('div');
         repoTopics.className = 'repo-topics';
-        repoTopics.innerHTML = `Topics: ${displayTopics(repo.topics)}`;
+        repoTopics.innerHTML = `${displayTopics(repo.topics)}`;
         repoMain.appendChild(repoTopics);
 
         repoCard.appendChild(repoHeader);
@@ -119,7 +119,7 @@ function displayRepos(repos) {
 
 function displayTopics(topics) {
     if (!topics || topics.length === 0) {
-        return 'No topics specified';
+        return '';
     }
     return topics.map(topic => `<span class="topic-block">${topic}</span>`).join('');
 }
